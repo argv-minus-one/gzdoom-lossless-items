@@ -1,0 +1,32 @@
+struct LosslessHealth play {
+	static bool, bool TryPickup(Health item, in out Actor other) {
+		item.PrevHealth = other.player != NULL ? other.player.health : other.health;
+		
+		if (other.GiveBody(item.Amount, item.MaxAmount)) {
+			let given = (other.player != NULL ? other.player.health : other.health) - item.PrevHealth;
+			item.Amount -= given;
+			bool ga = item.Amount <= 0;
+			return true, ga;
+		}
+		else
+			return false, false;
+	}
+}
+
+class LosslessStimpack : Stimpack replaces Stimpack {
+	override bool TryPickup(in out Actor other) {
+		bool ret, ga;
+		[ret, ga] = LosslessHealth.TryPickup(self, other);
+		if (ga) GoAwayAndDie();
+		return ret;
+	}
+}
+
+class LosslessMedikit : Medikit replaces Medikit {
+	override bool TryPickup(in out Actor other) {
+		bool ret, ga;
+		[ret, ga] = LosslessHealth.TryPickup(self, other);
+		if (ga) GoAwayAndDie();
+		return ret;
+	}
+}

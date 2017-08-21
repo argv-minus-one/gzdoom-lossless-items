@@ -1,0 +1,57 @@
+Version "2.5"
+#include "ZScript/LosslessHealth.zscript"
+#include "ZScript/LosslessAmmo.zscript"
+
+struct LosslessItems play {
+	static bool CallHandlePickup(Actor actor, Inventory item) {
+		for (let inv = actor.Inv; inv != NULL; inv = inv.Inv) {
+			if (inv.HandlePickup(item))
+				return true;
+			inv = inv.Inv;
+		}
+		return false;
+	}
+	
+	enum EPickupResult {
+		TRY_DEFAULT,
+		TOOK_PARTIAL,
+		TOOK_ALL,
+		TOOK_NONE
+	}
+	
+	static EPickupResult TryPickup(Inventory item, in out Actor toucher, Class<Inventory> toucherItemType = NULL, double amountFactor = 1) {
+		if (toucherItemType == NULL)
+			toucherItemType = item.GetClass();
+		
+		// In these cases, the pickup is always lossless.
+		if (sv_unlimited_pickup || item.Amount <= 0 || item.MaxAmount <= 0)
+			return TRY_DEFAULT;
+		
+		// If the touching actor doesn't have any of this item to begin with, then the pickup will never be lossless.
+		let toucherHas = toucher.FindInventory(toucherItemType, subclass: true);
+		if (toucherHas == NULL || toucherHas.Amount <= 0)
+			return TRY_DEFAULT;
+		
+		// Take note of how much the toucher had.
+		let amountToucherHad = toucherHas.Amount;
+		
+		// Try to do the pickup. If it fails, there's nothing more to do here.
+		// Note that `toucher.Inv` is guaranteed to not be NULL here, because if it were, FindInventory above would have failed.
+		item.bPickupGood = false;
+		if (!CallHandlePickup(toucher, item) || !item.bPickupGood)
+			return TOOK_NONE;
+		item.bPickupGood = false;
+		
+		// Figure out how much more the toucher now has, and deduct it from the amount remaining in this object.
+		// Take the amount factor into account.
+		let amountTaken = int((toucherHas.Amount - amountToucherHad) / amountFactor);
+		Console.Printf("%s took %d from %s.", toucher.GetClassName(), amountTaken, item.GetClassName());
+		item.Amount -= amountTaken;
+		
+		// If this item is now depleted, remove it.
+		if (item.Amount <= 0)
+			return TOOK_ALL;
+		else
+			return TOOK_PARTIAL;
+	}
+}

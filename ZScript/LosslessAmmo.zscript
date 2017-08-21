@@ -1,0 +1,10 @@
+class LosslessShellBox : ShellBox replaces ShellBox {
+	override bool TryPickup(in out Actor other) {
+		switch (LosslessItems.TryPickup(self, other, GetParentAmmo(), G_SkillPropertyFloat(SKILLP_AmmoFactor))) {
+			case LosslessItems.TRY_DEFAULT: return super.TryPickup(other);
+			case LosslessItems.TOOK_PARTIAL: return true;
+			case LosslessItems.TOOK_ALL: GoAwayAndDie(); return true;
+			default: return false;
+		}
+	}
+}

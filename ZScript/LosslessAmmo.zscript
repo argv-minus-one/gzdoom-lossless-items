@@ -1,4 +1,70 @@
+class LosslessClip : Clip replaces Clip {
+	override bool TryPickup(in out Actor other) {
+		switch (LosslessItems.TryPickup(self, other, GetParentAmmo(), G_SkillPropertyFloat(SKILLP_AmmoFactor))) {
+			case LOSSLESSPICKUP_TRY_DEFAULT: return super.TryPickup(other);
+			case LOSSLESSPICKUP_TOOK_PARTIAL: return true;
+			case LOSSLESSPICKUP_TOOK_ALL: GoAwayAndDie(); return true;
+			default: return false;
+		}
+	}
+}
+
+class LosslessClipBox : ClipBox replaces ClipBox {
+	override bool TryPickup(in out Actor other) {
+		switch (LosslessItems.TryPickup(self, other, GetParentAmmo(), G_SkillPropertyFloat(SKILLP_AmmoFactor))) {
+			case LOSSLESSPICKUP_TRY_DEFAULT: return super.TryPickup(other);
+			case LOSSLESSPICKUP_TOOK_PARTIAL: return true;
+			case LOSSLESSPICKUP_TOOK_ALL: GoAwayAndDie(); return true;
+			default: return false;
+		}
+	}
+}
+
+class LosslessRocketBox : RocketBox replaces RocketBox {
+	override bool TryPickup(in out Actor other) {
+		switch (LosslessItems.TryPickup(self, other, GetParentAmmo(), G_SkillPropertyFloat(SKILLP_AmmoFactor))) {
+			case LOSSLESSPICKUP_TRY_DEFAULT: return super.TryPickup(other);
+			case LOSSLESSPICKUP_TOOK_PARTIAL: return true;
+			case LOSSLESSPICKUP_TOOK_ALL: GoAwayAndDie(); return true;
+			default: return false;
+		}
+	}
+}
+
+class LosslessShell : Shell replaces Shell {
+	override bool TryPickup(in out Actor other) {
+		switch (LosslessItems.TryPickup(self, other, GetParentAmmo(), G_SkillPropertyFloat(SKILLP_AmmoFactor))) {
+			case LOSSLESSPICKUP_TRY_DEFAULT: return super.TryPickup(other);
+			case LOSSLESSPICKUP_TOOK_PARTIAL: return true;
+			case LOSSLESSPICKUP_TOOK_ALL: GoAwayAndDie(); return true;
+			default: return false;
+		}
+	}
+}
+
 class LosslessShellBox : ShellBox replaces ShellBox {
+	override bool TryPickup(in out Actor other) {
+		switch (LosslessItems.TryPickup(self, other, GetParentAmmo(), G_SkillPropertyFloat(SKILLP_AmmoFactor))) {
+			case LOSSLESSPICKUP_TRY_DEFAULT: return super.TryPickup(other);
+			case LOSSLESSPICKUP_TOOK_PARTIAL: return true;
+			case LOSSLESSPICKUP_TOOK_ALL: GoAwayAndDie(); return true;
+			default: return false;
+		}
+	}
+}
+
+class LosslessCell : Cell replaces Cell {
+	override bool TryPickup(in out Actor other) {
+		switch (LosslessItems.TryPickup(self, other, GetParentAmmo(), G_SkillPropertyFloat(SKILLP_AmmoFactor))) {
+			case LOSSLESSPICKUP_TRY_DEFAULT: return super.TryPickup(other);
+			case LOSSLESSPICKUP_TOOK_PARTIAL: return true;
+			case LOSSLESSPICKUP_TOOK_ALL: GoAwayAndDie(); return true;
+			default: return false;
+		}
+	}
+}
+
+class LosslessCellPack : CellPack replaces CellPack {
 	override bool TryPickup(in out Actor other) {
 		switch (LosslessItems.TryPickup(self, other, GetParentAmmo(), G_SkillPropertyFloat(SKILLP_AmmoFactor))) {
 			case LOSSLESSPICKUP_TRY_DEFAULT: return super.TryPickup(other);

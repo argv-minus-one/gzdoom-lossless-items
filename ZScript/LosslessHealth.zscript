@@ -1,32 +1,39 @@
 struct LosslessHealth play {
-	static bool, bool TryPickup(Health item, in out Actor other) {
+	static LosslessPickupResult TryPickup(Health item, in out Actor other) {
 		item.PrevHealth = other.player != NULL ? other.player.health : other.health;
 		
 		if (other.GiveBody(item.Amount, item.MaxAmount)) {
 			let given = (other.player != NULL ? other.player.health : other.health) - item.PrevHealth;
 			item.Amount -= given;
-			bool ga = item.Amount <= 0;
-			return true, ga;
+			
+			if (item.Amount <= 0)
+				return LOSSLESSPICKUP_TOOK_ALL;
+			else
+				return LOSSLESSPICKUP_TOOK_PARTIAL;
 		}
 		else
-			return false, false;
+			return LOSSLESSPICKUP_TOOK_NONE;
 	}
 }
 
 class LosslessStimpack : Stimpack replaces Stimpack {
 	override bool TryPickup(in out Actor other) {
-		bool ret, ga;
-		[ret, ga] = LosslessHealth.TryPickup(self, other);
-		if (ga) GoAwayAndDie();
-		return ret;
+		switch (LosslessHealth.TryPickup(self, other)) {
+			case LOSSLESSPICKUP_TRY_DEFAULT: return super.TryPickup(other);
+			case LOSSLESSPICKUP_TOOK_ALL: GoAwayAndDie(); return true;
+			case LOSSLESSPICKUP_TOOK_PARTIAL: return true;
+			default: return false;
+		}
 	}
 }
 
 class LosslessMedikit : Medikit replaces Medikit {
 	override bool TryPickup(in out Actor other) {
-		bool ret, ga;
-		[ret, ga] = LosslessHealth.TryPickup(self, other);
-		if (ga) GoAwayAndDie();
-		return ret;
+		switch (LosslessHealth.TryPickup(self, other)) {
+			case LOSSLESSPICKUP_TRY_DEFAULT: return super.TryPickup(other);
+			case LOSSLESSPICKUP_TOOK_ALL: GoAwayAndDie(); return true;
+			case LOSSLESSPICKUP_TOOK_PARTIAL: return true;
+			default: return false;
+		}
 	}
 }

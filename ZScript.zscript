@@ -46,7 +46,6 @@ struct LosslessItems play {
 		// Figure out how much more the toucher now has, and deduct it from the amount remaining in this object.
 		// Take the amount factor into account.
 		let amountTaken = int((toucherHas.Amount - amountToucherHad) / amountFactor);
-		Console.Printf("%s took %d from %s.", toucher.GetClassName(), amountTaken, item.GetClassName());
 		item.Amount -= amountTaken;
 		
 		// If this item is now depleted, remove it.

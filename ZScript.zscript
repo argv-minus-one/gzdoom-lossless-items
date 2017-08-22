@@ -11,11 +11,10 @@ enum LosslessPickupResult {
 
 struct LosslessItems play {
 	static bool CallHandlePickup(Actor actor, Inventory item) {
-		for (let inv = actor.Inv; inv != NULL; inv = inv.Inv) {
+		for (let inv = actor.Inv; inv != NULL; inv = inv.Inv)
 			if (inv.HandlePickup(item))
 				return true;
-			inv = inv.Inv;
-		}
+		
 		return false;
 	}
 	

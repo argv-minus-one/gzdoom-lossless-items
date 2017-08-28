@@ -1,0 +1,13 @@
+actor LosslessStimpackBD : LosslessStimpack replaces Stimpack2 {}
+
+actor LosslessMedikitBD : LosslessMedikit replaces Medikit2 {
+	states {
+		BecomeRealistic:
+			TNT1 A 0 A_SpawnItem("RealisticMedikit")
+			stop
+	}
+}
+
+actor LosslessMedikitBDRealistic : LosslessMedikit replaces RealisticMedikit {
+	Inventory.Amount 50
+}

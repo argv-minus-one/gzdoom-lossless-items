@@ -1,0 +1,38 @@
+actor LosslessStimpackPB : LosslessStimpack replaces Stimpack2 {
+	+FLOORCLIP
+	+DONTGIB
+	Inventory.Pickupsound "misc/N_HP_pickup"
+	
+	states {
+		Spawn:
+			ST1M A -1
+			stop
+	}
+}
+
+actor LosslessMedikitPB : LosslessMedikit replaces Medikit2 {
+	+FLOORCLIP
+	+DONTGIB
+	Inventory.Pickupsound "misc/L_HP_pickup"
+	
+	states {
+		Spawn:
+			M3DI A -1
+			stop
+	}
+}
+
+actor LosslessMedipackPB : LosslessMedikit replaces NewMedipack {
+	+FLOORCLIP
+	+DONTGIB
+	Inventory.Amount 50
+	Inventory.PickupMessage "Picked up a medipack."
+	Health.LowMessage 20, "Picked up a medipack that you REALLY need!"
+	Inventory.Pickupsound "misc/E_HP_pickup"
+	
+	states {
+		Spawn:
+			MEDP A -1
+			stop
+	}
+}
